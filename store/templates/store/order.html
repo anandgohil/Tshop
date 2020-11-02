@@ -1,0 +1,63 @@
+{% extends './base.html' %}
+{% load tshirt_tags %}
+{% load oreders_tags %}
+{% block content %}
+    <div class="container">
+        <table class="table">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>DATE</th>
+                <th>TIME</th>
+                <th>STATUS</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for order in orders %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ order.date }}</td>
+                    <td>
+                        <table class="table table-sm">
+                            <thead>
+                            <tr>
+                                <th>SR NO</th>
+                                <th>Image</th>
+                                <th>Tshirt</th>
+                                <th>Price</th>
+                                <th>Quantity</th>
+                                <th>Total</th>
+
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for oi in order.orderitems_set.all %}
+                                <tr>
+                                    <td>{{ forloop.counter }}</td>
+                                    <td><img height="60px" src="{{ oi.tshirt.image.url }}"></td>
+                                    <td>{{ oi.tshirt.name }}</td>
+                                    <td>{{ oi.price |rupee }}</td>
+                                    <td>{{ oi.quantity }}</td>
+                                    <td>{% multiply oi.price oi.quantity as result %}{{ result|rupee }}</td>
+
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+
+                        </table>
+
+                    </td>
+                    <td><span
+                            class="badge badge-{% get_order_status_class order.order_status %}">{{ order.order_status }}</span>
+                    </td>
+
+                </tr>
+
+                </tbody>
+
+            {% endfor %}
+        </table>
+
+    </div>
+{% endblock %}
+
